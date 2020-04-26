@@ -1,4 +1,5 @@
 - https://web.dev/nfc/
+- Renew URL: https://developers.chrome.com/origintrials/#/registration/1022457852901457921
 
 ```
 <meta http-equiv="origin-trial" content="TOKEN_GOES_HERE">

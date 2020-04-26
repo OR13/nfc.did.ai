@@ -10,6 +10,10 @@ const HomePage = ({ tmui, setTmuiProp }) => {
       <Typography variant={"h5"} style={{ marginBottom: "32px" }}>
         Test
       </Typography>
+
+      <Typography style={{ marginBottom: "32px" }}>
+        See <a href="https://web.dev/nfc/">web.dev/nfc</a>.
+      </Typography>
     </BasePage>
   );
 };
