@@ -1,3 +1,11 @@
+# nfc.did.ai
+
+This repo contains nfc experiments, and some custom tooling for working with tangem nfc cards.
+
+None of this is endorsed by tangem / any code is unoffocial / alpha level stuff... for reference only. DO NOT USE IN PRODUCTION.
+
+### Testing with Web NFC
+
 - https://web.dev/nfc/
 - Renew URL: https://developers.chrome.com/origintrials/#/registration/1022457852901457921
 
