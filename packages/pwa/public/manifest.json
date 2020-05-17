@@ -1,6 +1,6 @@
 {
-  "short_name": "Secp256k1 JSON-LD",
-  "name": "Secp256k1 JSON-LD",
+  "short_name": "NFC Experiments",
+  "name": "NFC Experiments",
   "icons": [
     {
       "src": "favicon.ico",

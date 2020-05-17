@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import BasePage from "../BasePage/BasePage";
 import Button from "@material-ui/core/Button";
-
+import JSONEditor from "../../components/JSONEditor/JSONEditor";
 const HomePage = ({ tmui, setTmuiProp }) => {
+  const [state, setState] = React.useState({});
   return (
     <BasePage tmui={tmui} setTmuiProp={setTmuiProp}>
       <Typography variant={"h5"} style={{ marginBottom: "32px" }}>
@@ -24,6 +25,7 @@ const HomePage = ({ tmui, setTmuiProp }) => {
             const { NDEFReader } = window;
             /* Scan NFC tags */
             const reader = new NDEFReader();
+
             reader
               .scan()
               .then(() => {
@@ -34,7 +36,8 @@ const HomePage = ({ tmui, setTmuiProp }) => {
                   );
                 };
                 reader.onreading = (event) => {
-                  console.log("NDEF message read.");
+                  setState({ event });
+                  console.log("NDEF message read.", event);
                 };
               })
               .catch((error) => {
@@ -47,6 +50,8 @@ const HomePage = ({ tmui, setTmuiProp }) => {
       >
         Scan for NFC
       </Button>
+
+      <JSONEditor jsonObject={state} />
     </BasePage>
   );
 };

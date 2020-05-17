@@ -1,0 +1,9 @@
+  const message = [ndef.textRecord("hello")];
+    const bytes = ndef.encodeMessage(message);
+    // hello world, this is a long message to see how ndef handles long messages
+    let data = Buffer.concat([Buffer.from("30C", "hex"), Buffer.from(bytes)]);
+    if (data.length < 16) {
+      let padding = Buffer.allocUnsafe(16 - data.length);
+      padding.fill(0);
+      data = Buffer.concat([padding, data]);
+    }
