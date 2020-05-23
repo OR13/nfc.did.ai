@@ -10,12 +10,26 @@ const HomePage = ({ tmui, setTmuiProp }) => {
   return (
     <BasePage tmui={tmui} setTmuiProp={setTmuiProp}>
       <Typography variant={"h5"} style={{ marginBottom: "32px" }}>
-        Test
+        NDEF Parsed Records
       </Typography>
 
       <Typography style={{ marginBottom: "32px" }}>
         See <a href="https://web.dev/nfc/">web.dev/nfc</a>.
       </Typography>
+
+      <Button
+        onClick={async () => {
+          if ("NDEFWriter" in window) {
+            const { NDEFWriter } = window;
+            const writer = new NDEFWriter();
+            await writer.write({
+              records: [{ recordType: "url", data: "https://nfc.did.ai/" }],
+            });
+          }
+        }}
+      >
+        Write
+      </Button>
 
       <Button
         variant={"contained"}
@@ -36,11 +50,29 @@ const HomePage = ({ tmui, setTmuiProp }) => {
                   );
                 };
                 reader.onreading = (event) => {
-                  setState({ event });
-                  console.log("NDEF message read.", event);
+                  console.log(event);
+                  let parsedRecords = [];
+                  const decoder = new TextDecoder();
+                  for (const record of event.message.records) {
+                    console.log("Record type:  " + record.recordType);
+                    console.log("MIME type:    " + record.mediaType);
+                    console.log("Record id:    " + record.id);
+                    console.log(
+                      "Record data:    " + decoder.decode(record.data)
+                    );
+                    parsedRecords.push({
+                      id: record.id,
+                      recordType: record.recordType,
+                      mediaType: record.mediaType,
+                      data: decoder.decode(record.data),
+                    });
+                  }
+                  setState({ parsedRecords });
+                  console.log("NDEF message read.");
                 };
               })
               .catch((error) => {
+                console.log(error);
                 console.log(`Error! Scan failed to start: ${error}.`);
               });
           } else {
@@ -48,7 +80,7 @@ const HomePage = ({ tmui, setTmuiProp }) => {
           }
         }}
       >
-        Scan for NFC
+        Read
       </Button>
 
       <JSONEditor jsonObject={state} />
