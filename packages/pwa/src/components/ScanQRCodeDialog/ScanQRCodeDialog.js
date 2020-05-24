@@ -1,28 +1,44 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
 
-import Grid from '@material-ui/core/Grid';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
+import Grid from "@material-ui/core/Grid";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
 
-import DialogTitle from '@material-ui/core/DialogTitle';
-// import Typography from '@material-ui/core/Typography';
+import DialogTitle from "@material-ui/core/DialogTitle";
 
-import QrReader from 'react-qr-reader';
-import ReadOnlyJsonView from '../ReadOnlyJsonView/ReadOnlyJsonView';
-class ScanQRCodeDialog extends React.Component {
+import { JSONEditor } from "@transmute/material-did-core";
+
+import _ from "lodash";
+import QrReader from "react-qr-reader";
+
+let context = new AudioContext();
+
+const beep = _.throttle((freq = 300, duration = 200, vol = 50) => {
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  oscillator.connect(gain);
+  oscillator.frequency.value = freq;
+  oscillator.type = "sine";
+  gain.connect(context.destination);
+  gain.gain.value = vol * 0.01;
+  oscillator.start(context.currentTime);
+  oscillator.stop(context.currentTime + duration * 0.001);
+}, 1 * 1000);
+
+export class ScanQRCodeDialog extends React.Component {
   state = {
-    data: {},
+    data: "",
   };
 
   handleClose = () => {
     this.props.onClose();
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.props.onSubmit(this.state.data);
   };
@@ -46,39 +62,21 @@ class ScanQRCodeDialog extends React.Component {
                   onError={() => {
                     // do nothing
                   }}
-                  onScan={data => {
+                  onScan={(data) => {
                     if (data) {
-                      let context = null;
-                      const beep = (freq = 520, duration = 200, vol = 100) => {
-                          const oscillator = context.createOscillator();
-                          const gain = context.createGain();
-                          oscillator.connect(gain);
-                          oscillator.frequency.value = freq;
-                          oscillator.type = "square";
-                          gain.connect(context.destination);
-                          gain.gain.value = vol * 0.01;
-                          oscillator.start(context.currentTime);
-                          oscillator.stop(context.currentTime + duration * 0.001);
-                      }
-                      context = new AudioContext();
                       beep(300, 300, 25);
-                      try {
-                        let parsed = JSON.parse(data);
-                        this.setState({
-                          data: parsed,
-                        });
-                      } catch (e){
-                        console.error(e)
-                      }
+                      this.setState({
+                        data: JSON.stringify({ data }, null, 2),
+                      });
                     }
                   }}
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                 />
               </Grid>
               <Grid item xs={12} sm={8}>
-                <ReadOnlyJsonView
-                jsonObject={this.state.data}
-                // style={{ height: "128px" }}
+                <JSONEditor
+                  value={this.state.data}
+                  // style={{ height: "128px" }}
                 />
               </Grid>
             </Grid>
@@ -102,7 +100,7 @@ class ScanQRCodeDialog extends React.Component {
 ScanQRCodeDialog.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
 };
 
 export default ScanQRCodeDialog;

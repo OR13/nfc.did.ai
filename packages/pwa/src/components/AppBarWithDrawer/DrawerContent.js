@@ -9,6 +9,7 @@ import List from "@material-ui/core/List";
 
 import CodeIcon from "@material-ui/icons/Code";
 import HomeIcon from "@material-ui/icons/Home";
+import NfcIcon from "@material-ui/icons/Nfc";
 import history from "../../store/history";
 
 const sideMenuPrimaryItem = [
@@ -18,6 +19,14 @@ const sideMenuPrimaryItem = [
     showForRoles: ["tier0", "tier1", "tier2"],
     onClick: () => {
       history.push("/");
+    },
+  },
+  {
+    label: "NXP Wallet",
+    icon: <NfcIcon />,
+    showForRoles: ["tier0", "tier1", "tier2"],
+    onClick: () => {
+      history.push("/nxp");
     },
   },
   {

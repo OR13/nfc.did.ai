@@ -4,7 +4,9 @@ import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import BasePage from "../BasePage/BasePage";
 import Button from "@material-ui/core/Button";
-import JSONEditor from "../../components/JSONEditor/JSONEditor";
+
+import { JSONEditor } from "@transmute/material-did-core";
+
 const HomePage = ({ tmui, setTmuiProp }) => {
   const [state, setState] = React.useState({});
   return (
@@ -83,7 +85,7 @@ const HomePage = ({ tmui, setTmuiProp }) => {
         Read
       </Button>
 
-      <JSONEditor jsonObject={state} />
+      <JSONEditor value={JSON.stringify(state, null, 2)} />
     </BasePage>
   );
 };
