@@ -30,6 +30,14 @@ const sideMenuPrimaryItem = [
     },
   },
   {
+    label: "Tangem Wallet",
+    icon: <NfcIcon />,
+    showForRoles: ["tier0", "tier1", "tier2"],
+    onClick: () => {
+      history.push("/tangem");
+    },
+  },
+  {
     label: "Source Code",
     icon: <CodeIcon />,
     showForRoles: ["tier0", "tier1", "tier2"],

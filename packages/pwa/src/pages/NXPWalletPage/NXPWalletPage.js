@@ -109,6 +109,13 @@ const NXPWalletPage = ({ tmui, setTmuiProp }) => {
         NXP Wallet
       </Typography>
 
+      <Typography style={{ marginBottom: "32px" }}>
+        Wallet seed's are encoded in URLs that look like:{" "}
+        <Link href="https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226">
+          https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226
+        </Link>
+      </Typography>
+
       <ScanQRCodeDialog
         open={state.qrScannerOpen}
         onClose={() => {
@@ -138,32 +145,60 @@ const NXPWalletPage = ({ tmui, setTmuiProp }) => {
 
       {!state.render && (
         <div>
-          <Typography>
-            Scan an NFC Tag with an NDEF URL Record that looks like:{" "}
-            <Link href="https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226">
-              https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226
-            </Link>
-          </Typography>
-          <br />
-          <br />
-          <Button
-            variant={"contained"}
-            color={"secondary"}
-            onClick={handleScanNfc}
-          >
-            Scan NFC
-          </Button>{" "}
-          <Button
-            variant={"contained"}
-            onClick={() => {
-              setState({
-                ...state,
-                qrScannerOpen: true,
-              });
-            }}
-          >
-            Scan QR
-          </Button>
+          <div style={{ marginBottom: "32px" }}>
+            <Button
+              variant={"contained"}
+              color={"secondary"}
+              onClick={handleScanNfc}
+            >
+              Read NFC
+            </Button>
+
+            <Typography style={{ marginTop: "8px" }}>
+              Scan an NFC Tag with an NDEF URL Record.
+            </Typography>
+          </div>
+          <div style={{ marginBottom: "32px" }}>
+            <Button
+              variant={"contained"}
+              onClick={() => {
+                setState({
+                  ...state,
+                  qrScannerOpen: true,
+                });
+              }}
+            >
+              Read QR
+            </Button>
+            <Typography style={{ marginTop: "8px" }}>
+              Scan an QR Code of a URL.
+            </Typography>
+          </div>
+          <div>
+            <Button
+              variant={"contained"}
+              onClick={async () => {
+                if ("NDEFWriter" in window) {
+                  const { NDEFWriter } = window;
+                  const writer = new NDEFWriter();
+                  await writer.write({
+                    records: [
+                      {
+                        recordType: "url",
+                        data:
+                          "https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226",
+                      },
+                    ],
+                  });
+                }
+              }}
+            >
+              Write NFC
+            </Button>
+            <Typography style={{ marginTop: "8px" }}>
+              Write an NFC Tag NDEF URL Record.
+            </Typography>
+          </div>
         </div>
       )}
       {state.render && <NXPWallet {...state} />}
