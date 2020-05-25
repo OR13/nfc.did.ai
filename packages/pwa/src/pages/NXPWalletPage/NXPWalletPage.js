@@ -111,14 +111,12 @@ const NXPWalletPage = ({ tmui, setTmuiProp }) => {
 
       <Typography style={{ marginBottom: "32px" }}>
         Wallet seed's are encoded in URLs that look like: <br />
-        <div>
-          <Link
-            style={{ wordBreak: "break-all" }}
-            href="https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226"
-          >
-            https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226
-          </Link>
-        </div>
+        <Link
+          style={{ wordBreak: "break-all" }}
+          href="https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226"
+        >
+          https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226
+        </Link>
       </Typography>
 
       <ScanQRCodeDialog
