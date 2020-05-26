@@ -13,6 +13,18 @@ const HomePage = ({ tmui, setTmuiProp }) => {
       </Typography>
 
       <div style={{ marginBottom: "32px" }}>
+        <Typography>
+          Storing seed values in querystrings is fundamentally not safe, and is
+          used only for demonstration purposes. For example:
+        </Typography>
+
+        <Link href="https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226">
+          https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226
+        </Link>
+        <Typography>DO NOT DO THIS IN PRODUCTION.</Typography>
+      </div>
+
+      <div style={{ marginBottom: "32px" }}>
         <Link href="/nxp">NXP Wallet</Link>
         <Typography style={{ padding: "8px" }}>
           "MIFARE Classic ICs started a revolution in the contactless smart card

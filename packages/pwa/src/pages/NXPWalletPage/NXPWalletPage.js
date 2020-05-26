@@ -109,15 +109,17 @@ const NXPWalletPage = ({ tmui, setTmuiProp }) => {
         NXP Wallet
       </Typography>
 
-      <Typography style={{ marginBottom: "32px" }}>
-        Wallet seed's are encoded in URLs that look like: <br />
-        <Link
-          style={{ wordBreak: "break-all" }}
-          href="https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226"
-        >
+      <div style={{ marginBottom: "32px" }}>
+        <Typography>
+          Storing seed values in querystrings is fundamentally not safe, and is
+          used only for demonstration purposes. For example:
+        </Typography>
+
+        <Link href="https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226">
           https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226
         </Link>
-      </Typography>
+        <Typography>DO NOT DO THIS IN PRODUCTION.</Typography>
+      </div>
 
       <ScanQRCodeDialog
         open={state.qrScannerOpen}

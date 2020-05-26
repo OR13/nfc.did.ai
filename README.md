@@ -4,6 +4,12 @@ This repo contains nfc experiments, and some custom tooling for working with tan
 
 None of this is endorsed by tangem / any code is unoffocial / alpha level stuff... for reference only. DO NOT USE IN PRODUCTION.
 
+Storing seed values in querystrings is fundamentally not safe, and is used only for demonstration purposes.
+
+For example: https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226
+
+DO NOT DO THIS IN PRODUCTION.
+
 ### Testing with Web NFC
 
 - https://web.dev/nfc/
