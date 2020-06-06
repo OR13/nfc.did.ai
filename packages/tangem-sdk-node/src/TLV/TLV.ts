@@ -63,7 +63,10 @@ export const parseRequest = async (buffer: Buffer): Promise<any> => {
   obj['Tag'] = select(buffer, 5, 6);
   obj['Length'] = select(buffer, 6, 7);
   obj['Value'] = select(buffer, 7, buffer.length);
-  obj['Parsed_Value'] = await tlvToObject(Buffer.from(obj['Value'], 'hex'));
+  let parsedValue = await tlvToObject(Buffer.from(obj['Value'], 'hex'));
+  if (Object.keys(parsedValue).length > 1) {
+    obj['Parsed_Value'] = parsedValue;
+  }
 
   return obj;
 };

@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-import { tlvToObject } from '../TLV';
+// import { tlvToObject } from '../TLV';
 
 export const readCard = async (reader: any, pin1: string) => {
   const pin1Hex = crypto
