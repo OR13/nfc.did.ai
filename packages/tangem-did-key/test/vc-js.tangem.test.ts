@@ -34,7 +34,7 @@ describe('vc-js-sanity', () => {
   let key: any;
   let suite: any;
   let verifiableCredential: any;
-  // let verifiablePresentation: any;
+  let verifiablePresentation: any;
 
   let reader: any;
   const pin1 = '000000';
@@ -54,16 +54,15 @@ describe('vc-js-sanity', () => {
         const signer = () => {
           return {
             async sign({ data }: any) {
-              console.log(data.length);
               const createVerifyData = Buffer.from(
                 data.buffer,
                 data.byteOffset,
                 data.length
               ).toString('hex');
-              expect(createVerifyData).toBe(
-                '65794a68624763694f694a465a45525451534973496d49324e4349365a6d467363325573496d4e79615851694f6c7369596a5930496c31392ee511ffbb92a58dc5c01ebefd6e47ccabb82069ff65ac196c2aca24197b850c6c5db18d6c02aadf5fa707c0f74750dbb149cb5819a1e2faaa5f1a858c01cf0457'
-              );
-              console.log(createVerifyData);
+              // raw credential...
+              // expect(createVerifyData).toBe(
+              //   '65794a68624763694f694a465a45525451534973496d49324e4349365a6d467363325573496d4e79615851694f6c7369596a5930496c31392ee511ffbb92a58dc5c01ebefd6e47ccabb82069ff65ac196c2aca24197b850c6c5db18d6c02aadf5fa707c0f74750dbb149cb5819a1e2faaa5f1a858c01cf0457'
+              // );
               const signature = await signWithCard(
                 reader,
                 createVerifyData,
@@ -71,9 +70,7 @@ describe('vc-js-sanity', () => {
                 pin2,
                 hashAlg
               );
-              console.log(signature);
-              // return Buffer.from(signature, 'hex');
-              return Buffer.from('');
+              return new Uint8Array(Buffer.from(signature, 'hex'));
             },
           };
         };
@@ -95,41 +92,39 @@ describe('vc-js-sanity', () => {
   });
 
   it('issue', async () => {
-    // console.log(key);
     verifiableCredential = await vc.issue({
       credential: { ...credential },
       suite,
       documentLoader,
     });
-    console.log(verifiableCredential);
-    // expect(verifiableCredential.proof).toBeDefined();
+    expect(verifiableCredential.proof).toBeDefined();
   });
 
-  // it('createPresentation & signPresentation', async () => {
-  //   const id = 'ebc6f1c2';
-  //   const holder = key.id;
-  //   const presentation = vc.createPresentation({
-  //     verifiableCredential,
-  //     id,
-  //     holder,
-  //   });
-  //   expect(presentation.type).toEqual(['VerifiablePresentation']);
-  //   verifiablePresentation = await vc.signPresentation({
-  //     presentation,
-  //     suite,
-  //     challenge: '123',
-  //     documentLoader,
-  //   });
-  //   expect(verifiablePresentation.proof).toBeDefined();
-  // });
+  it('createPresentation & signPresentation', async () => {
+    const id = 'ebc6f1c2';
+    const holder = key.id;
+    const presentation = vc.createPresentation({
+      verifiableCredential,
+      id,
+      holder,
+    });
+    expect(presentation.type).toEqual(['VerifiablePresentation']);
+    verifiablePresentation = await vc.signPresentation({
+      presentation,
+      suite,
+      challenge: '123',
+      documentLoader,
+    });
+    expect(verifiablePresentation.proof).toBeDefined();
+  });
 
-  // it('verify', async () => {
-  //   const result = await vc.verify({
-  //     presentation: verifiablePresentation,
-  //     challenge: '123',
-  //     suite,
-  //     documentLoader,
-  //   });
-  //   expect(result.verified).toBe(true);
-  // });
+  it('verify', async () => {
+    const result = await vc.verify({
+      presentation: verifiablePresentation,
+      challenge: '123',
+      suite,
+      documentLoader,
+    });
+    expect(result.verified).toBe(true);
+  });
 });

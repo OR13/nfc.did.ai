@@ -6,6 +6,7 @@ const bs58 = require('bs58');
 
 export const resolveFromCard = async (reader: any, pin1: string = '000000') => {
   const response = await card.read(reader, pin1);
+  // console.log(response);
   let publicKey = Buffer.from(response.WALLET_PUBLIC_KEY, 'hex');
   const key = new Ed25519KeyPair({
     publicKeyBase58: bs58.encode(publicKey),
@@ -28,5 +29,6 @@ export const signWithCard = async (
     pin2,
     hashAlg
   );
+  console.log(response);
   return response.Wallet_Signature;
 };
