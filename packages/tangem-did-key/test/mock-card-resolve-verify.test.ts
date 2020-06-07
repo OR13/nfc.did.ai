@@ -1,7 +1,8 @@
+import crypto from 'crypto';
+
 const { Ed25519KeyPair } = require('crypto-ld');
 // const { keyToDidDoc } = require('did-method-key').driver();
 const bs58 = require('bs58');
-const crypto = require('crypto');
 
 const card = {
   '90': '',

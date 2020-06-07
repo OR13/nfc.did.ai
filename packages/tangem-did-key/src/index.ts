@@ -29,6 +29,6 @@ export const signWithCard = async (
     pin2,
     hashAlg
   );
-  console.log(response);
+  // console.log(response);
   return response.Wallet_Signature;
 };

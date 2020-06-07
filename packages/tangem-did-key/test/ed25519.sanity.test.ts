@@ -1,39 +1,58 @@
+const chloride = require('chloride');
 const { Ed25519KeyPair } = require('crypto-ld');
 const bs58 = require('bs58');
+
+const key = {
+  id:
+    'did:key:z6MkjRagNiMu91DduvCvgEsqLZDVzrJzFrwahc4tXLt9DoHd#z6MkjRagNiMu91DduvCvgEsqLZDVzrJzFrwahc4tXLt9DoHd',
+  type: 'Ed25519VerificationKey2018',
+  controller: 'did:key:z6MkjRagNiMu91DduvCvgEsqLZDVzrJzFrwahc4tXLt9DoHd',
+  publicKeyBase58: '5yKdnU7ToTjAoRNDzfuzVTfWBH38qyhE1b9xh4v8JaWF',
+  privateKeyBase58:
+    '28xXA4NyCQinSJpaZdSuNBM4kR2GqYb8NPqAtZoGCpcRYWBcDXtzVAzpZ9BAfgV334R2FC383fiHaWWWAacRaYGs',
+};
+
+const createVerifyData =
+  '65794a68624763694f694a465a45525451534973496d49324e4349365a6d467363325573496d4e79615851694f6c7369596a5930496c31392ee511ffbb92a58dc5c01ebefd6e47ccabb82069ff65ac196c2aca24197b850c6c5db18d6c02aadf5fa707c0f74750dbb149cb5819a1e2faaa5f1a858c01cf0457';
+const raw_transaction = Buffer.from(createVerifyData, 'hex');
+
+const signatureHex =
+  'b3d9ec8249ab3781491ce7dc1059badf751a68c7a70898b2904de26dd4f3ad624c84f6911854a95955c6ae14de6fe914737c1528101cc504b385023e38c7990d';
+
 describe('ed25519.sanity', () => {
-  it('card response to did document', async () => {
-    const key = await Ed25519KeyPair.generate({
-      seed: Buffer.from(
-        '7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226',
-        'hex'
-      ),
-    });
-
-    let publicKey = Buffer.from(
-      'fa545ad5b31815046c3e3a7311d66c55f9d4acf555c49810403ac3eace4e5e00',
-      'hex'
+  it('chloride.sign', () => {
+    const privateKey = bs58.decode(key.privateKeyBase58);
+    const signature = chloride.crypto_sign_detached(
+      raw_transaction,
+      privateKey
     );
-    let privateKey = Buffer.from(
-      '7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226fa545ad5b31815046c3e3a7311d66c55f9d4acf555c49810403ac3eace4e5e00',
-      'hex'
+    expect(signature.toString('hex')).toBe(signatureHex);
+  });
+
+  it('chloride.verify', () => {
+    const publicKey = bs58.decode(key.publicKeyBase58);
+    const signature = Buffer.from(signatureHex, 'hex');
+    const verified = chloride.crypto_sign_verify_detached(
+      signature,
+      raw_transaction,
+      publicKey
     );
+    expect(verified).toBe(true);
+  });
 
-    expect(key.publicKeyBase58).toBe(bs58.encode(publicKey));
-    expect(key.privateKeyBase58).toBe(bs58.encode(privateKey));
-
-    const createVerifyData =
-      '65794a68624763694f694a465a45525451534973496d49324e4349365a6d467363325573496d4e79615851694f6c7369596a5930496c31392ee511ffbb92a58dc5c01ebefd6e47ccabb82069ff65ac196c2aca24197b850c6c5db18d6c02aadf5fa707c0f74750dbb149cb5819a1e2faaa5f1a858c01cf0457';
-    const raw_transaction = Buffer.from(createVerifyData, 'hex');
-    const signer = key.signer();
+  it('Ed25519KeyPair.sign', async () => {
+    const keypair = await Ed25519KeyPair.from(key);
+    const signer = keypair.signer();
     const signature = await signer.sign({ data: raw_transaction });
-    expect(signature.toString('hex')).toBe(
-      '1e4aa5d3bd8d30a23a025d9d060bb9c25e58389c468ccbfedd8b60fd66a07a9c57d1039f4b9913e5f63462763ff70ad92b61d9bda3cc12e283918777626f3401'
-    );
+    expect(signature.toString('hex')).toBe(signatureHex);
+  });
 
-    const verifier = key.verifier();
+  it('Ed25519KeyPair.verify', async () => {
+    const keypair = await Ed25519KeyPair.from(key);
+    const verifier = keypair.verifier();
     const verified = await verifier.verify({
       data: raw_transaction,
-      signature,
+      signature: Buffer.from(signatureHex, 'hex'),
     });
     expect(verified).toBe(true);
   });
