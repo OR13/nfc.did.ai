@@ -8,11 +8,13 @@ describe('ed25519.sanity', () => {
         'hex'
       ),
     });
-    const raw_transaction = Buffer.from('');
+    const createVerifyData =
+      '65794a68624763694f694a465a45525451534973496d49324e4349365a6d467363325573496d4e79615851694f6c7369596a5930496c31392ee511ffbb92a58dc5c01ebefd6e47ccabb82069ff65ac196c2aca24197b850c6c5db18d6c02aadf5fa707c0f74750dbb149cb5819a1e2faaa5f1a858c01cf0457';
+    const raw_transaction = Buffer.from(createVerifyData, 'hex');
     const signer = keypair.signer();
     const signature = await signer.sign({ data: raw_transaction });
     expect(signature.toString('hex')).toBe(
-      'f3f042cb6fdd2c98399a9318fc57fd9b9d363d38f47c8220f9d8a4a9752fac9e6a67fc48b4e691552724eacf8ac2a9ac5557e7f6d7cfd7728d336b736a6f3a08'
+      '1e4aa5d3bd8d30a23a025d9d060bb9c25e58389c468ccbfedd8b60fd66a07a9c57d1039f4b9913e5f63462763ff70ad92b61d9bda3cc12e283918777626f3401'
     );
     const verifier = keypair.verifier();
     const verified = await verifier.verify({

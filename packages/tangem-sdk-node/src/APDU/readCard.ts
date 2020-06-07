@@ -8,7 +8,7 @@ export const readCard = async (reader: any, pin1: string) => {
     .update(Buffer.from(pin1))
     .digest('hex');
 
-  console.log(pin1Hex.toString().toUpperCase());
+  // console.log(pin1Hex.toString().toUpperCase());
 
   const packetString = [
     '00', // CLA

@@ -15,21 +15,6 @@ export const tlvToObject = async (buffer: Buffer): Promise<any> => {
     let length = buffer.slice(1, 2);
     let lengthInt = parseInt(length.toString('hex'), 16);
 
-    // if (tagHex == '04') {
-    //   console.log(tagHex);
-    //   console.log(length);
-    //   console.log(responseObject);
-    //   console.log(buffer.toString('hex'));
-    //   // length = Buffer.from('04', 'hex');
-    // }
-    // if (tagHex == '63') {
-    //   console.log(tagHex);
-    //   console.log(responseObject);
-    //   console.log(buffer.toString('hex'));
-    //   // length = Buffer.from('04', 'hex');
-    // }
-
-    // console.log(lengthInt);
     let value = buffer.slice(2, lengthInt + 2);
 
     let knownTag = Tags[tagHex];
