@@ -1,4 +1,4 @@
-import { read, sign } from '.';
+import { read, hashThenSignMessage } from '.';
 import { NFC } from 'nfc-pcsc';
 
 const nfc = new NFC();
@@ -15,7 +15,13 @@ describe('card', () => {
         const hashAlg = 'sha-512';
         let response = await read(reader, pin1);
         expect(response.CID).toBeDefined();
-        response = await sign(reader, createVerifyData, pin1, pin2, hashAlg);
+        response = await hashThenSignMessage(
+          reader,
+          createVerifyData,
+          pin1,
+          pin2,
+          hashAlg
+        );
         console.log(response);
         expect(response.Wallet_Signature).toBeDefined();
         done();

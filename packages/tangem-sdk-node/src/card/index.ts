@@ -1,5 +1,6 @@
 import { readCard } from '../APDU/readCard';
-import { signRaw } from '../APDU/signRaw';
+import { signMessageHash } from '../APDU/signMessageHash';
+import { signMessageRaw } from '../APDU/signMessageRaw';
 import { tlvToObject } from '../TLV';
 
 export const read = async (reader: any, pin1: string) => {
@@ -8,14 +9,25 @@ export const read = async (reader: any, pin1: string) => {
   return parsed;
 };
 
-export const sign = async (
+export const signMessage = async (
   reader: any,
-  createVerifyData: string,
+  message: string,
+  pin1: string = '000000',
+  pin2: string = '000'
+) => {
+  const res = await signMessageRaw(reader, message, pin1, pin2);
+  const parsed = await tlvToObject(res);
+  return parsed;
+};
+
+export const hashThenSignMessage = async (
+  reader: any,
+  message: string,
   pin1: string = '000000',
   pin2: string = '000',
   hashAlg: string = 'sha-512'
 ) => {
-  const res = await signRaw(reader, createVerifyData, pin1, pin2, hashAlg);
+  const res = await signMessageHash(reader, message, pin1, pin2, hashAlg);
   const parsed = await tlvToObject(res);
   return parsed;
 };

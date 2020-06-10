@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-export const signRaw = async (
+export const signMessageHash = async (
   reader: any,
   createVerifyData: string,
   pin1: string = '000000',

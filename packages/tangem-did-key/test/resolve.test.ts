@@ -10,7 +10,7 @@ describe('resolve', () => {
     card = await tlvToObject(Buffer.from(cardResponse, 'hex'));
     let curve = Buffer.from(card.Curve_ID, 'hex').toString();
     expect(curve.indexOf('ed25519')).toBe(0);
-    // console.log(card)
+    console.log(card);
     let publicKey = Buffer.from(card.WALLET_PUBLIC_KEY, 'hex');
     // const encodedBuf = multibase.encode('base58btc', publicKey)
     const key = new Ed25519KeyPair({

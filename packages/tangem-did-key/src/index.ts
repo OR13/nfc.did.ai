@@ -17,18 +17,10 @@ export const resolveFromCard = async (reader: any, pin1: string = '000000') => {
 
 export const signWithCard = async (
   reader: any,
-  createVerifyData: string,
+  message: string,
   pin1: string = '000000',
-  pin2: string = '000',
-  hashAlg: string = 'sha-512'
+  pin2: string = '000'
 ) => {
-  const response = await card.sign(
-    reader,
-    createVerifyData,
-    pin1,
-    pin2,
-    hashAlg
-  );
-  // console.log(response);
+  const response = await card.signMessage(reader, message, pin1, pin2);
   return response.Wallet_Signature;
 };
