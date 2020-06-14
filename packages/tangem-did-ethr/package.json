@@ -39,7 +39,7 @@
     "typescript": "^3.9.2"
   },
   "dependencies": {
-    "@transmute/tangem-sdk-node": "0.0.0",
+    "@transmute/tangem-sdk-node": "0.0.1",
     "bitcoin-ts": "^1.14.2",
     "ethereum-public-key-to-address": "0.0.2",
     "nfc-pcsc": "^0.8.0",

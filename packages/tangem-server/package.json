@@ -1,0 +1,25 @@
+{
+  "name": "tangem-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Orie Steele",
+  "license": "ISC",
+  "dependencies": {
+    "@transmute/did-key-bls12381": "^0.1.0",
+    "@transmute/did-key-ed25519": "^0.1.0",
+    "@transmute/did-key-secp256k1": "^0.1.0",
+    "@transmute/did-key-x25519": "^0.1.0",
+    "@transmute/did-key.js": "^0.1.0",
+    "@transmute/tangem-did-key": "0.1.0",
+    "crypto-ld": "^3.7.0",
+    "fastify": "^2.14.1",
+    "fastify-cors": "^3.0.3",
+    "jsonld-signatures": "^5.1.0",
+    "nfc-pcsc": "^0.8.0",
+    "vc-js": "^0.6.4"
+  }
+}

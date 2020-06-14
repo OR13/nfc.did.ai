@@ -1,7 +1,30 @@
 import { card } from '@transmute/tangem-sdk-node';
-import { resolver } from '@transmute/did-key.js';
+// TODO: fix see https://github.com/transmute-industries/did-key.js/issues/1
+// import { resolver } from '@transmute/did-key.js';
+import { driver as ed25519_driver } from '@transmute/did-key-ed25519';
+import { driver as secp256k1_driver } from '@transmute/did-key-secp256k1';
+
 import { instantiateSecp256k1 } from 'bitcoin-ts';
 const bs58 = require('bs58');
+
+const resolver = {
+  resolve: (did: string) => {
+    if (did.indexOf('did:key:') !== 0) {
+      throw new Error('did must be of method did:key.');
+    }
+    const idchar: any = did.split('did:key:').pop();
+    const encodedType = idchar.substring(0, 4);
+    switch (encodedType) {
+      case 'z6Mk':
+        return ed25519_driver.get({ did });
+      case 'zQ3s':
+        return secp256k1_driver.get({ did });
+      default:
+        throw new Error('Unknown DID Key type: ' + encodedType);
+    }
+  },
+};
+
 export const getCurve = (response: any) => {
   let curve = Buffer.from(response.Curve_ID, 'hex')
     .toString('utf-8')
@@ -22,15 +45,7 @@ export const getCurve = (response: any) => {
   return curve;
 };
 
-export const resolveFromCard = async (reader: any, pin1: string = '000000') => {
-  const response = await card.read(reader, pin1);
-  if (response.Signing_Method !== '00') {
-    console.warn(
-      'Card.Signing_Method must be "00" for use with Linked Data Proofs.'
-    );
-  }
-
-  const curve = getCurve(response);
+const getPrefix = (curve: string) => {
   let prefix;
 
   switch (curve) {
@@ -43,6 +58,18 @@ export const resolveFromCard = async (reader: any, pin1: string = '000000') => {
     default:
       throw new Error('did:key does not support: ' + curve);
   }
+  return prefix;
+};
+export const resolveFromCard = async (reader: any, pin1: string = '000000') => {
+  const response = await card.read(reader, pin1);
+  if (response.Signing_Method !== '00') {
+    console.warn(
+      'Card.Signing_Method must be "00" for use with Linked Data Proofs.'
+    );
+  }
+
+  const curve = getCurve(response);
+  const prefix = getPrefix(curve);
 
   let publicKeyHex = response.WALLET_PUBLIC_KEY;
   if (curve === 'secp256k1') {
