@@ -1,4 +1,4 @@
-import resolver from './resolver';
+import { resolver } from '@transmute/did-key.js';
 
 const jsonld = require('jsonld');
 

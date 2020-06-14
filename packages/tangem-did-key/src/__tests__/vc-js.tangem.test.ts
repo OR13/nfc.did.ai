@@ -1,11 +1,15 @@
-import documentLoader from '../src/documentLoader';
+import { NFC } from 'nfc-pcsc';
+
+import { resolveFromCard, signerFactory } from '..';
+
+import documentLoader from '../documentLoader';
 
 const jsigs = require('jsonld-signatures');
 const { Ed25519KeyPair } = require('crypto-ld');
 const vc = require('vc-js');
-const { keyToDidDoc } = require('did-method-key').driver();
 
 const { Ed25519Signature2018 } = jsigs.suites;
+const nfc = new NFC();
 
 const credential = {
   '@context': [
@@ -32,24 +36,35 @@ describe('vc-js-sanity', () => {
   let verifiableCredential: any;
   let verifiablePresentation: any;
 
-  beforeAll(async () => {
-    key = await Ed25519KeyPair.generate({
-      seed: Buffer.from(
-        '7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226',
-        'hex'
-      ),
-    });
+  let reader: any;
 
-    const didDocument = keyToDidDoc(key);
-    key.id = didDocument.publicKey[0].id;
-    key.controller = didDocument.publicKey[0].controller;
-    credential.issuer = key.controller;
+  beforeAll(done => {
+    nfc.on('reader', (_reader: any) => {
+      reader = _reader;
+      _reader.autoProcessing = false;
+      _reader.on('card', async () => {
+        const didDocument: any = await resolveFromCard(reader);
+        key = await Ed25519KeyPair.from(didDocument.publicKey[0]);
+        // this is required when the did document uses `@base`
+        key.id = key.controller + key.id;
+        expect(key.publicKeyBase58).toBeDefined();
+        expect(key.privateKeyBase58).toBeUndefined();
+        key.signer = signerFactory(reader);
+        suite = new Ed25519Signature2018({
+          key,
+          date: '2019-12-11T03:50:55Z',
+        });
 
-    suite = new Ed25519Signature2018({
-      key,
-      date: '2019-12-11T03:50:55Z',
+        credential.issuer = key.controller;
+        done();
+      });
     });
   });
+
+  afterAll(async () => {
+    await reader.disconnect();
+  });
+
   it('issue', async () => {
     verifiableCredential = await vc.issue({
       credential: { ...credential },
@@ -84,6 +99,7 @@ describe('vc-js-sanity', () => {
       suite,
       documentLoader,
     });
+    // console.log(JSON.stringify(result, null, 2))
     expect(result.verified).toBe(true);
   });
 });

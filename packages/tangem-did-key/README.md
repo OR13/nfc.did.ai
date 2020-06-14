@@ -1,57 +1,101 @@
-# Tangem DID Key
+# @transmute/tangem-did-key
 
-Read a `did:key` from a Tangem NFC Card.
+Built using [@transmute/did-key.js](https://github.com/transmute-industries/did-key.js).
 
-Returns:
+### Resolve
+
+```ts
+import { NFC } from 'nfc-pcsc';
+import { resolveFromCard } from '@transmute/tangem-did-key';
+
+const nfc = new NFC();
+
+nfc.on('reader', (reader: any) => {
+  reader.autoProcessing = false;
+  reader.on('card', async () => {
+    const didDocument: any = await resolveFromCard(reader);
+  });
+});
+```
+
+#### Example Ed25519 Personalized Card
 
 ```json
 {
-  "@context": ["https://w3id.org/did/v0.11"],
-  "id": "did:key:z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53",
-  "publicKey": [
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
     {
-      "id": "did:key:z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53#z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53",
-      "type": "Ed25519VerificationKey2018",
-      "controller": "did:key:z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53",
-      "publicKeyBase58": "6EGAAV1uypKgYbyPZS9V8KiRDQncbk8iYQCqcRgXA4Hf"
+      "@base": "did:key:z6MkwP46D1fKFyzfRLyFjtwBYPcJXnbrTzg2HsTzQNSfaZVq"
     }
   ],
-  "authentication": [
-    "did:key:z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53#z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53"
+  "id": "did:key:z6MkwP46D1fKFyzfRLyFjtwBYPcJXnbrTzg2HsTzQNSfaZVq",
+  "publicKey": [
+    {
+      "id": "#z6MkwP46D1fKFyzfRLyFjtwBYPcJXnbrTzg2HsTzQNSfaZVq",
+      "type": "Ed25519VerificationKey2018",
+      "controller": "did:key:z6MkwP46D1fKFyzfRLyFjtwBYPcJXnbrTzg2HsTzQNSfaZVq",
+      "publicKeyBase58": "Hvo3cmQsvSWCJr8Z4KyLhJ4JiDL147RfbrZ4a6UefLiT"
+    }
   ],
-  "assertionMethod": [
-    "did:key:z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53#z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53"
-  ],
-  "capabilityDelegation": [
-    "did:key:z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53#z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53"
-  ],
-  "capabilityInvocation": [
-    "did:key:z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53#z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53"
-  ],
+  "authentication": ["#z6MkwP46D1fKFyzfRLyFjtwBYPcJXnbrTzg2HsTzQNSfaZVq"],
+  "assertionMethod": ["#z6MkwP46D1fKFyzfRLyFjtwBYPcJXnbrTzg2HsTzQNSfaZVq"],
+  "capabilityDelegation": ["#z6MkwP46D1fKFyzfRLyFjtwBYPcJXnbrTzg2HsTzQNSfaZVq"],
+  "capabilityInvocation": ["#z6MkwP46D1fKFyzfRLyFjtwBYPcJXnbrTzg2HsTzQNSfaZVq"],
   "keyAgreement": [
     {
-      "id": "did:key:z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53#z6LSkeZSZoC3wnXkeqLtjmp5HnzEYN45JukvvJKf7zkN6tpu",
+      "id": "#z6LScNdbAWuu53LjUpjhANNs59spWkWV6sPaH9dHSjgLoiJF",
       "type": "X25519KeyAgreementKey2019",
-      "controller": "did:key:z6MkjgXCkjGMKMp9f6p6F17KyRGR2z4U1dP5ER7mSheY5H53",
-      "publicKeyBase58": "9yPH3VPBrKp1ZSy8D8J7yCmkhDWxcJan3KbydY6qPX49"
+      "controller": "did:key:z6MkwP46D1fKFyzfRLyFjtwBYPcJXnbrTzg2HsTzQNSfaZVq",
+      "publicKeyBase58": "hTReD72yaczPSMvdirukZfLfbyNQGDRQAubxH2p6LXV"
     }
   ]
 }
 ```
 
-### Getting Started
+#### Example Secp256k1 Personalized Card
 
-```sh
-# this demo uses unpublished node modules from a mono repo
-# You must bootstrap to make them available.
-npx lerna bootstrap
-npm run test
+```json
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    {
+      "@base": "did:key:zQ3shoHtJreRDjLGKFB8Ric6Nxv2dDHWe9pTqPcVqsH7h37ok"
+    }
+  ],
+  "id": "did:key:zQ3shoHtJreRDjLGKFB8Ric6Nxv2dDHWe9pTqPcVqsH7h37ok",
+  "publicKey": [
+    {
+      "id": "#zQ3shoHtJreRDjLGKFB8Ric6Nxv2dDHWe9pTqPcVqsH7h37ok",
+      "type": "EcdsaSecp256k1VerificationKey2019",
+      "controller": "did:key:zQ3shoHtJreRDjLGKFB8Ric6Nxv2dDHWe9pTqPcVqsH7h37ok",
+      "publicKeyBase58": "23LjJ1VwkQh3S15T1LXDL9KfBZXKfsGRJTgk3ZwSZpdx2"
+    }
+  ],
+  "authentication": ["#zQ3shoHtJreRDjLGKFB8Ric6Nxv2dDHWe9pTqPcVqsH7h37ok"],
+  "assertionMethod": ["#zQ3shoHtJreRDjLGKFB8Ric6Nxv2dDHWe9pTqPcVqsH7h37ok"],
+  "capabilityDelegation": [
+    "#zQ3shoHtJreRDjLGKFB8Ric6Nxv2dDHWe9pTqPcVqsH7h37ok"
+  ],
+  "capabilityInvocation": ["#zQ3shoHtJreRDjLGKFB8Ric6Nxv2dDHWe9pTqPcVqsH7h37ok"]
+}
 ```
 
-Tested with OMNIKEY 5021 CL:
+### Sign
 
-```
-OMNIKEY CardMan (076B:5320) 5321  device attached
-```
+```ts
+import { NFC } from 'nfc-pcsc';
+import { signer } from '@transmute/tangem-did-key'
 
-Be sure that you device can read large APDUs.
+const nfc = new NFC();
+
+nfc.on('reader', (reader: any) => {
+  reader.autoProcessing = false;
+  reader.on('card', async () => {
+    const _signer = signer(reader);
+    const message = Buffer.from('hello world')
+    const signature: Buffer = await _signer.sign({
+      data: message
+    })
+  });
+});
+```
