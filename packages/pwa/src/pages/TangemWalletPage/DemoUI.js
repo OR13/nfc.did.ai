@@ -111,6 +111,18 @@ export default function SimpleTabs() {
     setValue(newValue);
   };
 
+  const renderHardwarePrompt = () => {
+    return (
+      <Typography style={{ marginBottom: "32px" }}>
+        Make sure the{" "}
+        <a href="https://github.com/OR13/nfc.did.ai/tree/master/packages/tangem-server">
+          local web server
+        </a>{" "}
+        is running and place a Tangem card on the reader before proceeding.
+      </Typography>
+    );
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -125,11 +137,7 @@ export default function SimpleTabs() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Typography style={{ marginBottom: "32px" }}>
-          Make sure the{" "}
-          <a href="https://github.com/OR13/nfc.did.ai">local web server</a> is
-          running and place a Tangem Card on the Reader before pressing resolve.
-        </Typography>
+        {renderHardwarePrompt()}
         <Button
           variant={"contained"}
           color={"secondary"}
@@ -151,11 +159,7 @@ export default function SimpleTabs() {
         )}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Typography style={{ marginBottom: "32px" }}>
-          Make sure the{" "}
-          <a href="https://github.com/OR13/nfc.did.ai">local web server</a> is
-          running and place a Tangem Card on the Reader before pressing resolve.
-        </Typography>
+        {renderHardwarePrompt()}
         <Button
           variant={"contained"}
           color={"secondary"}

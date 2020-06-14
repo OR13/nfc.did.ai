@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
 import BasePage from "../BasePage/BasePage";
 import { NXPWallet } from "../../components/NXPWallet";
 
@@ -109,104 +110,120 @@ const NXPWalletPage = ({ tmui, setTmuiProp }) => {
         NXP Wallet
       </Typography>
 
-      <div style={{ marginBottom: "32px" }}>
-        <Typography>
-          Storing seed values in querystrings is fundamentally not safe, and is
-          used only for demonstration purposes. For example:
-        </Typography>
-
-        <Link href="https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226">
-          https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226
-        </Link>
-        <Typography>DO NOT DO THIS IN PRODUCTION.</Typography>
-      </div>
-
-      <ScanQRCodeDialog
-        open={state.qrScannerOpen}
-        onClose={() => {
-          setState({
-            ...state,
-            qrScannerOpen: false,
-          });
-        }}
-        onSubmit={async (data) => {
-          const _url = JSON.parse(data).data;
-          let contents = [];
-          let status = "UNLOCKED";
-          const url = new URL(_url);
-          let seed = url.search.split("?seed=").pop();
-          const wallet = await UniversalWallet2020.generate(
-            new Uint8Array(Buffer.from(seed, "hex"))
-          );
-          contents = wallet.contents;
-          setState({
-            contents,
-            status,
-            render: true,
-            qrScannerOpen: false,
-          });
-        }}
-      />
-
-      {!state.render && (
-        <div>
+      <Grid container>
+        <Grid item xs={12} sm={6}>
           <div style={{ marginBottom: "32px" }}>
-            <Button
-              variant={"contained"}
-              color={"secondary"}
-              onClick={handleScanNfc}
-            >
-              Read NFC
-            </Button>
+            <Typography>
+              Storing seed values in querystrings is fundamentally not safe, and
+              is used only for web-nfc demonstration purposes.
+            </Typography>
 
-            <Typography style={{ marginTop: "8px" }}>
-              Scan an NFC Tag with an NDEF URL Record.
+            <Typography>
+              For example{" "}
+              <Link href="https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226">
+                click here.
+              </Link>
             </Typography>
+
+            <Typography>DO NOT DO THIS IN PRODUCTION.</Typography>
           </div>
-          <div style={{ marginBottom: "32px" }}>
-            <Button
-              variant={"contained"}
-              onClick={() => {
-                setState({
-                  ...state,
-                  qrScannerOpen: true,
-                });
-              }}
-            >
-              Read QR
-            </Button>
-            <Typography style={{ marginTop: "8px" }}>
-              Scan an QR Code of a URL.
-            </Typography>
-          </div>
-          <div>
-            <Button
-              variant={"contained"}
-              onClick={async () => {
-                if ("NDEFWriter" in window) {
-                  const { NDEFWriter } = window;
-                  const writer = new NDEFWriter();
-                  await writer.write({
-                    records: [
-                      {
-                        recordType: "url",
-                        data:
-                          "https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226",
-                      },
-                    ],
-                  });
-                }
-              }}
-            >
-              Write NFC
-            </Button>
-            <Typography style={{ marginTop: "8px" }}>
-              Write an NFC Tag NDEF URL Record.
-            </Typography>
-          </div>
-        </div>
-      )}
-      {state.render && <NXPWallet {...state} />}
+
+          <ScanQRCodeDialog
+            open={state.qrScannerOpen}
+            onClose={() => {
+              setState({
+                ...state,
+                qrScannerOpen: false,
+              });
+            }}
+            onSubmit={async (data) => {
+              const _url = JSON.parse(data).data;
+              let contents = [];
+              let status = "UNLOCKED";
+              const url = new URL(_url);
+              let seed = url.search.split("?seed=").pop();
+              const wallet = await UniversalWallet2020.generate(
+                new Uint8Array(Buffer.from(seed, "hex"))
+              );
+              contents = wallet.contents;
+              setState({
+                contents,
+                status,
+                render: true,
+                qrScannerOpen: false,
+              });
+            }}
+          />
+
+          {!state.render && (
+            <div>
+              <div style={{ marginBottom: "32px" }}>
+                <Button
+                  variant={"contained"}
+                  color={"secondary"}
+                  onClick={handleScanNfc}
+                >
+                  Read NFC
+                </Button>
+
+                <Typography style={{ marginTop: "8px" }}>
+                  Scan an NFC Tag with an NDEF URL Record.
+                </Typography>
+              </div>
+              <div style={{ marginBottom: "32px" }}>
+                <Button
+                  variant={"contained"}
+                  onClick={() => {
+                    setState({
+                      ...state,
+                      qrScannerOpen: true,
+                    });
+                  }}
+                >
+                  Read QR
+                </Button>
+                <Typography style={{ marginTop: "8px" }}>
+                  Scan an QR Code of a URL.
+                </Typography>
+              </div>
+              <div>
+                <Button
+                  variant={"contained"}
+                  onClick={async () => {
+                    if ("NDEFWriter" in window) {
+                      const { NDEFWriter } = window;
+                      const writer = new NDEFWriter();
+                      await writer.write({
+                        records: [
+                          {
+                            recordType: "url",
+                            data:
+                              "https://nfc.did.ai/nxp?seed=7052adea8f9823817065456ecad5bf24dcd31a698f7bc9a0b5fc170849af4226",
+                          },
+                        ],
+                      });
+                    }
+                  }}
+                >
+                  Write NFC
+                </Button>
+                <Typography style={{ marginTop: "8px" }}>
+                  Write an NFC Tag NDEF URL Record.
+                </Typography>
+              </div>
+            </div>
+          )}
+          {state.render && <NXPWallet {...state} />}
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <iframe
+            src="https://drive.google.com/file/d/1ciTfCXetPTsGsAPCmYkq0vUl2sFrJDNd/preview"
+            width="640"
+            height="480"
+          ></iframe>
+        </Grid>
+      </Grid>
     </BasePage>
   );
 };
