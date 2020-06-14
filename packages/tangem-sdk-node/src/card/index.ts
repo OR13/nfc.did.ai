@@ -12,10 +12,11 @@ export const read = async (reader: any, pin1: string) => {
 export const signMessage = async (
   reader: any,
   message: string,
+  cid: string = 'BB03000000000004',
   pin1: string = '000000',
   pin2: string = '000'
 ) => {
-  const res = await signMessageRaw(reader, message, pin1, pin2);
+  const res = await signMessageRaw(reader, message, cid, pin1, pin2);
   const parsed = await tlvToObject(res);
   return parsed;
 };

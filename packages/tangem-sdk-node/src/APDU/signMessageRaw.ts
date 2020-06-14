@@ -14,6 +14,7 @@ const leftPad = (val: string, size: number, ch: string) => {
 export const signMessageRaw = async (
   reader: any,
   message: string,
+  cid: string = 'BB03000000000004',
   pin1: string = '000000',
   pin2: string = '000'
 ) => {
@@ -36,14 +37,14 @@ export const signMessageRaw = async (
     2,
     '0'
   );
-  console.log(messageLengthHexNoPad);
+
   const packetString = [
     '00', // CLA
     'FB', // INS
     '00', // P1
     '00', // P2
     Lc, // Lc
-    '0108' + 'BB03000000000004',
+    '0108' + cid,
     '1020' + pin1Hex,
     '1120' + pin2Hex,
     '5101' + messageLengthHexNoPad,

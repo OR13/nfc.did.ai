@@ -2,7 +2,10 @@
   "name": "@transmute/tangem-sdk-node",
   "author": "Orie Steele",
   "module": "dist/tangem-sdk-node.esm.js",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
