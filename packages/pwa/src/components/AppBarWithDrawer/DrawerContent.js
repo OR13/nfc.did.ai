@@ -22,19 +22,19 @@ const sideMenuPrimaryItem = [
     },
   },
   {
-    label: "NXP Wallet",
-    icon: <NfcIcon />,
-    showForRoles: ["tier0", "tier1", "tier2"],
-    onClick: () => {
-      history.push("/nxp");
-    },
-  },
-  {
     label: "Tangem Wallet",
     icon: <NfcIcon />,
     showForRoles: ["tier0", "tier1", "tier2"],
     onClick: () => {
       history.push("/tangem");
+    },
+  },
+  {
+    label: "NXP Wallet",
+    icon: <NfcIcon />,
+    showForRoles: ["tier0", "tier1", "tier2"],
+    onClick: () => {
+      history.push("/nxp");
     },
   },
   {
