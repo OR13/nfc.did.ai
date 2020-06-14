@@ -8,7 +8,7 @@ import DemoUI from "./DemoUI";
 const TangemWalletPage = ({ tmui, setTmuiProp }) => {
   return (
     <BasePage tmui={tmui} setTmuiProp={setTmuiProp}>
-      <Typography variant={"h5"} style={{ marginBottom: "32px" }}>
+      <Typography style={{ marginBottom: "32px" }}>
         In this demo, we use{" "}
         <a href="https://github.com/transmute-industries/did-key.js">did:key</a>{" "}
         and <a href="https://shop.tangem.com">tangem cards</a> to resolve a DID,
