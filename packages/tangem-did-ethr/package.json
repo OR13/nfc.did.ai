@@ -43,6 +43,6 @@
     "bitcoin-ts": "^1.14.2",
     "ethereum-public-key-to-address": "0.0.2",
     "nfc-pcsc": "^0.8.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   }
 }
